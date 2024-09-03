@@ -4,218 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanmani</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
+        /* Body Styling */
         body {
             margin: 0;
             padding: 0;
             background-image: url('https://i.pinimg.com/564x/d7/bb/a5/d7bba5f9544f277e1f909004c4355927.jpg');
             background-size: cover;
+            background-position: center;
             font-family: 'San Francisco', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
+            overflow: hidden;
         }
 
+        /* Title Styling */
         h1 {
-            font-size: 40px;
-            margin-top: 20px;
-            font-family: 'San Francisco', Arial, sans-serif;
+            font-size: 50px;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
 
+        /* Container Styling */
         .container {
             text-align: center;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            margin-top: 20px;
         }
 
+        /* Popup Styling */
         .popup {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: white;
-            border: 2px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             border-radius: 10px;
-            max-width: 80%;
+            text-align: center;
+            z-index: 10;
         }
 
-        .question {
+        .popup .question {
+            font-size: 24px;
             margin-bottom: 20px;
+            color: #333;
         }
 
-        .options {
+        .popup .options {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .popup button {
+            background-color: #ff4081;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .popup button:hover {
+            background-color: #e91e63;
+        }
+
+        /* GIF Styling */
+        #moving-gif {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Video Container Styling */
+        #video-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
             margin-top: 20px;
         }
 
-        button {
-            background-color: #007AFF;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        #video-container iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
         }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #gif {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            animation: fall 5s linear infinite;
-            z-index: 2;
-        }
-
-        #video-container {
-            display: none;
-        }
-
+        /* Love Message Styling */
         #love-message {
             display: none;
-            font-size: 24px;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            color: red;
-            background: rgba(255, 255, 255, 0.5);
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 192, 203, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            z-index: 3;
-            animation: crash 5s linear infinite;
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            z-index: 20;
+            animation: fadeInOut 5s infinite;
         }
 
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) translateX(-100vw);
-            }
-            100% {
-                transform: translateY(100vh) translateX(100vw);
-            }
-        }
-
-        @keyframes crash {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
+
     <h1>Kanmani</h1>
 
     <div class="container">
-        <button onclick="showPopup()">Pop the first question</button>
+        <button onclick="startSequence()">Start the Journey</button>
     </div>
 
+    <!-- Moving GIF -->
+    <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="Moving GIF" id="moving-gif">
+
+    <!-- Popups -->
     <div class="popup" id="popup1">
         <div class="question">Do you love me?</div>
         <div class="options">
-            <button onclick="nextPopup()">Yes</button>
-            <button onclick="hidePopup()">No</button>
+            <button onclick="nextPopup(2)">Yes</button>
+            <button onclick="denyLove()">No</button>
         </div>
-        <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="GIF" id="gif">
     </div>
 
     <div class="popup" id="popup2">
         <div class="question">Why are you so cute?</div>
         <div class="options">
-            <button onclick="nextPopup()">Yes</button>
-            <button onclick="hidePopup()">No</button>
+            <button onclick="nextPopup(3)">Because I love you</button>
+            <button onclick="nextPopup(3)">It's natural</button>
         </div>
-        <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="GIF" id="gif">
     </div>
 
     <div class="popup" id="popup3">
         <div class="question">Will you always be mine?</div>
         <div class="options">
-            <button onclick="nextPopup()">Yes</button>
-            <button onclick="hidePopup()">No</button>
+            <button onclick="nextPopup(4)">Forever</button>
+            <button onclick="nextPopup(4)">Absolutely</button>
         </div>
-        <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="GIF" id="gif">
     </div>
 
     <div class="popup" id="popup4">
-        <div class="question">I love you, and you can't stop me?</div>
+        <div class="question">I love you, and you can't stop me!</div>
         <div class="options">
-            <button onclick="nextPopup()">Yes</button>
-            <button onclick="hidePopup()">No</button>
+            <button onclick="nextPopup(5)">I love you too!</button>
+            <button onclick="nextPopup(5)">Love you more!</button>
         </div>
-        <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="GIF" id="gif">
     </div>
 
     <div class="popup" id="popup5">
-        <div class="question">Play this video:</div>
+        <div class="question">Here's a special video for you:</div>
         <div id="video-container">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?feature=shared" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <button onclick="playVideo()">Play Video</button>
     </div>
 
-    <div class="popup" id="popup6">
-        <div class="question">I love you.</div>
-        <div id="love-message">I love you.</div>
-    </div>
+    <!-- Love Message -->
+    <div id="love-message">I Love You ❤️</div>
 
     <script>
-        function showPopup() {
-            document.getElementById('popup1').style.display = 'block';
+        // Global Variables
+        let currentPopup = 1;
+        const totalPopups = 5;
+        const movingGif = document.getElementById('moving-gif');
+
+        // Start the sequence
+        function startSequence() {
+            document.querySelector('.container').style.display = 'none';
+            showPopup(currentPopup);
+            startMovingGif();
         }
 
-        function hidePopup() {
-            document.getElementById('popup1').style.display = 'none';
-            document.getElementById('popup2').style.display = 'none';
-            document.getElementById('popup3').style.display = 'none';
-            document.getElementById('popup4').style.display = 'none';
-            document.getElementById('popup5').style.display = 'none';
-            document.getElementById('popup6').style.display = 'none';
-            document.getElementById('video-container').style.display = 'none';
-            document.getElementById('love-message').style.display = 'none';
+        // Show specific popup
+        function showPopup(number) {
+            const popup = document.getElementById(`popup${number}`);
+            if (popup) {
+                popup.style.display = 'block';
+            }
         }
 
-        function nextPopup() {
-            hidePopup();
-            document.getElementById('gif').style.display = 'none';
-            document.getElementById('popup2').style.display = 'block';
+        // Hide specific popup
+        function hidePopup(number) {
+            const popup = document.getElementById(`popup${number}`);
+            if (popup) {
+                popup.style.display = 'none';
+            }
         }
 
-        function playVideo() {
-            hidePopup();
-            document.getElementById('video-container').style.display = 'block';
-            document.getElementById('popup6').style.display = 'block';
+        // Proceed to next popup
+        function nextPopup(nextNumber) {
+            hidePopup(currentPopup);
+            currentPopup = nextNumber;
+            if (currentPopup <= totalPopups) {
+                showPopup(currentPopup);
+            }
+            if (currentPopup === 5) {
+                showLoveMessage();
+                stopMovingGif();
+            }
         }
 
-        // Code for randomly appearing GIFs
-        function getRandomPosition() {
-            const x = Math.random() * window.innerWidth;
-            const y = Math.random() * window.innerHeight;
-            return { x, y };
+        // Deny Love Function
+        function denyLove() {
+            alert("Oh no! Please try again.");
         }
 
-        setInterval(() => {
-            const gif = document.getElementById('gif');
-            const position = getRandomPosition();
-            gif.style.transform = `translate(${position.x}px, ${position.y}px)`;
-        }, 300); // Change the interval as needed
+        // Show Love Message
+        function showLoveMessage() {
+            setTimeout(() => {
+                document.getElementById('love-message').style.display = 'flex';
+            }, 5000); // Show after 5 seconds
+        }
+
+        // Start Moving GIF
+        function startMovingGif() {
+            moveGifRandomly();
+            movingGifInterval = setInterval(moveGifRandomly, 2000);
+        }
+
+        // Stop Moving GIF
+        function stopMovingGif() {
+            clearInterval(movingGifInterval);
+            movingGif.style.display = 'none';
+        }
+
+        // Move GIF to random position
+        function moveGifRandomly() {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            movingGif.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // Adjust GIF position on window resize
+        window.addEventListener('resize', moveGifRandomly);
     </script>
+
 </body>
 </html>
