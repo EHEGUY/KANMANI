@@ -3,110 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanmani</title>
+    <title>Kanmani ❤️</title>
     <style>
-        /* Body Styling */
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
             margin: 0;
             padding: 0;
-            background-image: url('https://i.pinimg.com/564x/d7/bb/a5/d7bba5f9544f277e1f909004c4355927.jpg');
-            background-size: cover;
-            background-position: center;
-            font-family: 'San Francisco', Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ff6b6b, #ff8e8e, #ffa8a8, #ffb3ba);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Floating hearts background */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+        .main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Title Styling */
+        /* Title styling */
         h1 {
-            font-size: 50px;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
             color: #fff;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-        }
-
-        /* Container Styling */
-        .container {
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            animation: glow 2s ease-in-out infinite alternate;
             text-align: center;
         }
 
-        /* Popup Styling */
+        @keyframes glow {
+            from { text-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); }
+            to { text-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.4); }
+        }
+
+        /* Start button */
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .start-btn:hover:before {
+            left: 100%;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Popup styling */
         .popup {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.8);
             width: 90%;
-            max-width: 400px;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            max-width: 450px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             text-align: center;
-            z-index: 10;
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .popup.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
         }
 
         .popup .question {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
             color: #333;
+            line-height: 1.4;
         }
 
         .popup .options {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
         }
 
         .popup button {
-            background-color: #ff4081;
-            color: #fff;
-            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 15px 30px;
             border: none;
-            border-radius: 50px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
         }
 
         .popup button:hover {
-            background-color: #e91e63;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
-        /* GIF Styling */
+        .popup button:active {
+            transform: translateY(0);
+        }
+
+        /* Special styling for "No" button */
+        .no-btn {
+            background: linear-gradient(135deg, #666, #888) !important;
+            transition: all 0.3s ease;
+        }
+
+        .no-btn:hover {
+            transform: scale(0.95) !important;
+            opacity: 0.7;
+        }
+
+        /* Moving GIF styling */
         #moving-gif {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            z-index: 5;
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            z-index: 50;
             pointer-events: none;
+            border-radius: 50%;
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
-        /* Video Container Styling */
-        #video-container {
+        /* Video container */
+        .video-container {
             width: 100%;
             height: 0;
             padding-bottom: 56.25%;
             position: relative;
             overflow: hidden;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        #video-container iframe {
+        .video-container iframe {
             position: absolute;
             width: 100%;
             height: 100%;
             left: 0;
             top: 0;
+            border-radius: 15px;
         }
 
-        /* Love Message Styling */
+        /* Love message overlay */
         #love-message {
             display: none;
             position: fixed;
@@ -114,153 +239,339 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 192, 203, 0.8);
-            display: flex;
+            background: linear-gradient(45deg, rgba(255, 192, 203, 0.9), rgba(255, 182, 193, 0.9));
+            backdrop-filter: blur(10px);
             justify-content: center;
             align-items: center;
-            font-size: 48px;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 700;
             color: #fff;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            z-index: 20;
-            animation: fadeInOut 5s infinite;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 200;
+            animation: loveAppear 1s ease-out;
         }
 
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+        @keyframes loveAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Pulse animation for love message */
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Sparkle effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-out infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .popup {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .popup .question {
+                font-size: 1.3rem;
+            }
+            
+            .popup button {
+                min-width: 180px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Floating hearts background -->
+    <div class="floating-hearts" id="floating-hearts"></div>
 
-    <h1>Kanmani</h1>
-
-    <div class="container">
-        <button onclick="startSequence()">Start the Journey</button>
+    <!-- Main content -->
+    <div class="main-container">
+        <h1>Kanmani</h1>
+        <div class="container">
+            <button class="start-btn" onclick="startSequence()">✨ Start the Journey ✨</button>
+        </div>
     </div>
 
     <!-- Moving GIF -->
-    <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="Moving GIF" id="moving-gif">
+    <img src="https://media.tenor.com/bWUeVRqW9-IAAAAi/fast-cat-cat-excited.gif" alt="Cute Cat" id="moving-gif">
 
     <!-- Popups -->
     <div class="popup" id="popup1">
-        <div class="question">Do you love me?</div>
+        <div class="question">💕 Do you love me? 💕</div>
         <div class="options">
-            <button onclick="nextPopup(2)">Yes</button>
-            <button onclick="denyLove()">No</button>
+            <button onclick="nextPopup(2)">Yes, with all my heart! 💖</button>
+            <button class="no-btn" onclick="denyLove()">No</button>
         </div>
     </div>
 
     <div class="popup" id="popup2">
-        <div class="question">Why are you so cute?</div>
+        <div class="question">🌟 Why are you so amazing? 🌟</div>
         <div class="options">
-            <button onclick="nextPopup(3)">Because I love you</button>
-            <button onclick="nextPopup(3)">It's natural</button>
+            <button onclick="nextPopup(3)">Because I love you deeply 💝</button>
+            <button onclick="nextPopup(3)">It's just who I am 😊</button>
         </div>
     </div>
 
     <div class="popup" id="popup3">
-        <div class="question">Will you always be mine?</div>
+        <div class="question">🌙 Will you always be mine? 🌙</div>
         <div class="options">
-            <button onclick="nextPopup(4)">Forever</button>
-            <button onclick="nextPopup(4)">Absolutely</button>
+            <button onclick="nextPopup(4)">Forever and always 💫</button>
+            <button onclick="nextPopup(4)">Until the end of time ⭐</button>
         </div>
     </div>
 
     <div class="popup" id="popup4">
-        <div class="question">I love you, and you can't stop me!</div>
+        <div class="question">💌 I love you more than words can say! 💌</div>
         <div class="options">
-            <button onclick="nextPopup(5)">I love you too!</button>
-            <button onclick="nextPopup(5)">Love you more!</button>
+            <button onclick="nextPopup(5)">I love you too! 💕</button>
+            <button onclick="nextPopup(5)">Love you infinitely more! 💖</button>
         </div>
     </div>
 
     <div class="popup" id="popup5">
-        <div class="question">Here's a special video for you:</div>
-        <div id="video-container">
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="question">🎵 Here's something special for you: 🎵</div>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
     </div>
 
-    <!-- Love Message -->
-    <div id="love-message">I Love You ❤️</div>
+    <!-- Love message overlay -->
+    <div id="love-message" class="pulse">
+        <div>I Love You Forever ❤️✨</div>
+    </div>
 
     <script>
-        // Global Variables
         let currentPopup = 1;
         const totalPopups = 5;
         const movingGif = document.getElementById('moving-gif');
+        let movingGifInterval;
+        let heartInterval;
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('floating-hearts');
+            const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                
+                heartsContainer.appendChild(heart);
+                
+                // Remove heart after animation
+                setTimeout(() => {
+                    heart.remove();
+                }, 7000);
+            }, 500);
+        }
 
         // Start the sequence
         function startSequence() {
             document.querySelector('.container').style.display = 'none';
             showPopup(currentPopup);
             startMovingGif();
+            createSparkles();
         }
 
-        // Show specific popup
+        // Show popup with animation
         function showPopup(number) {
             const popup = document.getElementById(`popup${number}`);
             if (popup) {
                 popup.style.display = 'block';
+                setTimeout(() => popup.classList.add('show'), 10);
             }
         }
 
-        // Hide specific popup
+        // Hide popup with animation
         function hidePopup(number) {
             const popup = document.getElementById(`popup${number}`);
             if (popup) {
-                popup.style.display = 'none';
+                popup.classList.remove('show');
+                setTimeout(() => popup.style.display = 'none', 400);
             }
         }
 
-        // Proceed to next popup
+        // Next popup
         function nextPopup(nextNumber) {
             hidePopup(currentPopup);
-            currentPopup = nextNumber;
-            if (currentPopup <= totalPopups) {
-                showPopup(currentPopup);
-            }
-            if (currentPopup === 5) {
-                showLoveMessage();
-                stopMovingGif();
-            }
-        }
-
-        // Deny Love Function
-        function denyLove() {
-            alert("Oh no! Please try again.");
-        }
-
-        // Show Love Message
-        function showLoveMessage() {
             setTimeout(() => {
-                document.getElementById('love-message').style.display = 'flex';
-            }, 5000); // Show after 5 seconds
+                currentPopup = nextNumber;
+                if (currentPopup <= totalPopups) {
+                    showPopup(currentPopup);
+                }
+                if (currentPopup === 5) {
+                    setTimeout(showLoveMessage, 3000);
+                    setTimeout(stopMovingGif, 8000);
+                }
+            }, 500);
         }
 
-        // Start Moving GIF
+        // Deny love with fun interaction
+        function denyLove() {
+            const popup = document.getElementById('popup1');
+            popup.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            setTimeout(() => {
+                popup.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 200);
+            
+            // Make the "No" button smaller each time
+            const noBtn = event.target;
+            const currentSize = parseFloat(getComputedStyle(noBtn).fontSize);
+            noBtn.style.fontSize = (currentSize * 0.8) + 'px';
+            noBtn.style.minWidth = (parseInt(getComputedStyle(noBtn).minWidth) * 0.9) + 'px';
+            
+            if (currentSize < 10) {
+                noBtn.style.display = 'none';
+            }
+            
+            // Show encouraging message
+            const messages = [
+                "Come on, just a little love? 🥺",
+                "Pretty please? 💕",
+                "I know you love me! 😊",
+                "Don't be shy! ❤️"
+            ];
+            
+            setTimeout(() => {
+                alert(messages[Math.floor(Math.random() * messages.length)]);
+            }, 300);
+        }
+
+        // Show love message
+        function showLoveMessage() {
+            document.getElementById('love-message').style.display = 'flex';
+            createHeartExplosion();
+        }
+
+        // Start moving GIF
         function startMovingGif() {
             moveGifRandomly();
-            movingGifInterval = setInterval(moveGifRandomly, 2000);
+            movingGifInterval = setInterval(moveGifRandomly, 2500);
         }
 
-        // Stop Moving GIF
+        // Stop moving GIF
         function stopMovingGif() {
             clearInterval(movingGifInterval);
-            movingGif.style.display = 'none';
+            movingGif.style.opacity = '0';
+            setTimeout(() => {
+                movingGif.style.display = 'none';
+            }, 800);
         }
 
-        // Move GIF to random position
+        // Move GIF randomly
         function moveGifRandomly() {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 100);
-            movingGif.style.transform = `translate(${x}px, ${y}px)`;
+            const maxX = window.innerWidth - 80;
+            const maxY = window.innerHeight - 80;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            movingGif.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
         }
 
-        // Adjust GIF position on window resize
-        window.addEventListener('resize', moveGifRandomly);
-    </script>
+        // Create sparkle effects
+        function createSparkles() {
+            setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 1500);
+            }, 200);
+        }
 
+        // Create heart explosion effect
+        function createHeartExplosion() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = '50%';
+                    heart.style.top = '50%';
+                    heart.style.fontSize = '2rem';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.zIndex = '300';
+                    heart.style.animation = `
+                        heartExplode 2s ease-out forwards
+                    `;
+                    
+                    const angle = (i / 20) * Math.PI * 2;
+                    const distance = 200;
+                    heart.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+                    heart.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                    
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        // Add heart explosion animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes heartExplode {
+                0% {
+                    transform: translate(-50%, -50%) scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize floating hearts on load
+        window.addEventListener('load', createFloatingHearts);
+
+        // Responsive GIF positioning
+        window.addEventListener('resize', () => {
+            if (movingGifInterval) {
+                moveGifRandomly();
+            }
+        });
+    </script>
 </body>
 </html>
